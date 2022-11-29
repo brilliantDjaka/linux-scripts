@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ $HOSTNAME != toolbox ]]; then
+    echo "Please run inside toolbox"
+    exit 1
+fi
+
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
+
+
+CHECK_EDITED=`cat /etc/dnf/dnf.conf | grep max_parallel_downloads=10`
+
+if [[ $CHECK_EDITED == "" ]]; then
+    echo 'fastestmirror=True' >> /etc/dnf/dnf.conf
+    echo 'max_parallel_downloads=10' >> /etc/dnf/dnf.conf
+    echo 'deltarpm=True' >> /etc/dnf/dnf.conf
+    echo 'defaultyes=True' >> /etc/dnf/dnf.conf
+fi
+
+dnf update -y

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+PATHDIR=/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode
+
+if [[ $1 == "" ]]; then
+    if [[ `cat $PATHDIR` == "1" ]]; then
+        echo "conservation_mode active ✅"
+    else
+        echo "conservation_mode inactive ❌"
+    fi
+    echo
+    echo "USAGE: conmode set 0/1"
+elif [[ $1 == "set" ]]; then
+    
+    [ "$UID" -eq 0 ] || exec sudo "$0" "$@"
+
+    if [[ $2 == "0" ]]; then
+        echo "0" > $PATHDIR
+        echo "🆗"
+    elif [[ $2 == "1" ]]; then
+        echo "1" > $PATHDIR
+        echo "🆗"
+    else
+        echo "Please input 1 or 0"
+    fi
+
+fi
+
